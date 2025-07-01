@@ -14,6 +14,9 @@ export const routes: RouteObject[] = [{
         {path:'createActivity/:id?',element:<ActivityForm key='createActivity'/>},
         {path:'activities/:id',element:<ActivityDetails/>},
     ]
+},{
+    path:'/test',
+    element:<ActivityForm key='createActivity'/>,
 }];
 
 export const router = createBrowserRouter(routes);

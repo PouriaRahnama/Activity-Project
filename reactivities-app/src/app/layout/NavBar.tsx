@@ -26,6 +26,11 @@ export default function NavBar(){
               content="Create Ativity"
             />
           </Menu.Item>
+          <Menu.Item
+            as={NavLink}
+            to="/test"
+            name="test"
+          ></Menu.Item>
         </Container>
       </Menu>
     );
