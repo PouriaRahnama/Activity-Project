@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace Reactivities.Domain.DTOs.Activity
 {
@@ -22,6 +19,8 @@ namespace Reactivities.Domain.DTOs.Activity
         public string Category { get; set; }
 
         public string City { get; set; }
+
+        [Required(ErrorMessage ="تصویر الزامی است")]
         public IFormFile ImageFile { get; set; }
         public string Venue { get; set; }
 

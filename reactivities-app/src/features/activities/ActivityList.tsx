@@ -1,24 +1,10 @@
-import { Button, Card, Image, Label, Segment } from "semantic-ui-react";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { Card, Header, Segment } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
 import { observer } from "mobx-react-lite";
-import { NavLink } from "react-router-dom";
+import ActivityListItem from "./ActivityListItem";
 
 export default observer(function ActivityList() {
   const { activityStore } = useStore();
-  const [target, setTarget] = useState("");
-
-  useEffect(() => {
-    activityStore.loadActivities();
-  }, []);
-
-  function handleActivityDelete(
-    e: SyntheticEvent<HTMLButtonElement>,
-    id: string
-  ) {
-    setTarget(e.currentTarget.name);
-    activityStore.handleDeleteActivity(id);
-  }
 
   if (activityStore.acitivityRegistery.size === 0) {
     return (
@@ -48,66 +34,45 @@ export default observer(function ActivityList() {
       </div>
     );
 
-  return (
-    <Segment
-      padded
-      style={{ maxWidth: 900, margin: "auto", marginTop: 40, direction: "rtl" }}
-    >
-      <Card.Group itemsPerRow={3} stackable>
-        {activityStore.getActivitiesByDate().map((activity) => (
-          <Card key={activity.id} raised>
-            {activity?.imageName && (
-              <Image
-                src={`https://localhost:7227/images/${activity.imageName}`}
-                wrapped
-                ui={false}
-                alt={activity.title}
-                style={{ objectFit: "cover" }}
-              />
-            )}
-            <Card.Content style={{ textAlign: "right" }}>
-              <Card.Header>{activity.title}</Card.Header>
-              <Card.Meta>
-                <span>{new Date(activity.date).toLocaleDateString()}</span>
-              </Card.Meta>
-              <Card.Description>
-                <p>{activity.description}</p>
-                <p>
-                  <strong>مکان:</strong> {activity.city}، {activity.venue}
-                </p>
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra style={{ textAlign: "right" }}>
-              <Label color="teal" ribbon style={{ float: "left" }}>
-                {activity.category}
-              </Label>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  gap: "10px",
-                  float: "left",
-                  marginTop: 10,
-                }}
-              >
-                <Button
-                  as={NavLink}
-                  to={`/activities/${activity.id}`}
-                  color="blue"
-                  content="مشاهده"
-                />
-                <Button
-                  color="red"
-                  name={activity.id}
-                  loading={activityStore.submitting && target === activity.id}
-                  content="حذف"
-                  onClick={(e) => handleActivityDelete(e, activity.id)}
-                />
-              </div>
-            </Card.Content>
-          </Card>
-        ))}
-      </Card.Group>
-    </Segment>
-  );
+return (
+  <Segment
+    padded
+    style={{ maxWidth: 900, margin: "auto", marginTop: 40, direction: "rtl" }}
+  >
+    {activityStore.GroupedActivities.map(([date, activities]) => (
+      <div key={date}>
+        <Segment
+          inverted
+          color="blue"
+          style={{
+            borderRadius: "10px",
+            marginTop: 30,
+            textAlign: "right",
+            padding: "12px 20px",
+            fontWeight: "bold",
+            fontSize: "16px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            direction: "rtl",
+          }}
+        >
+          <i
+            className="calendar alternate outline icon"
+            style={{ marginLeft: 5 }}
+          ></i>
+          {new Date(date).toLocaleDateString("fa-IR")}
+        </Segment>
+
+        {/* این Card.Group برای نمایش چندتایی در ردیف */}
+        <Card.Group itemsPerRow={3} stackable>
+          {activities.map((activity) => (
+            <ActivityListItem key={activity.id} activity={activity} />
+          ))}
+        </Card.Group>
+      </div>
+    ))}
+  </Segment>
+);
+
 });

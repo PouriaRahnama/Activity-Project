@@ -1,6 +1,7 @@
-import { makeAutoObservable, observable, runInAction } from "mobx";
+import { keys, makeAutoObservable, observable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
+import { data } from "react-router-dom";
 
 export default class ActivityStore {
   //activities: Activity[] = [];
@@ -46,9 +47,22 @@ export default class ActivityStore {
     });
   };
 
-  getActivitiesByDate() {
+  get ActivitiesByDate() {
     return Array.from(this.acitivityRegistery.values()).sort(
       (a, b) => Date.parse(a.date) - Date.parse(b.date)
+    );
+  }
+  get GroupedActivities() {
+
+    return Object.entries(
+      this.ActivitiesByDate.reduce((activities, activity) => {
+        const date = activity.date;
+        activities[date] = activities[date]
+          ? [...activities[date], activity]
+          : [activity];
+
+        return activities;
+      }, {} as { [key: string]: Activity[] })
     );
   }
 

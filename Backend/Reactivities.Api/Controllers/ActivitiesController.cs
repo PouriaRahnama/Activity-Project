@@ -34,7 +34,6 @@ namespace Reactivities.Api.Controllers
         public async Task<IActionResult> GetActivity(Guid id)
         {
             var activity = await _activitiesService.GetActivityById(id);
-
             return new JsonResult(activity);
         }
 
