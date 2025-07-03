@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+.mashead {
+  display: flex;
+  align-items: center;        /* وسط‌چین عمودی */
+  justify-content: center;    /* وسط‌چین افقی */
+  background-image: linear-gradient(
+    135deg,
+    rgb(24, 42, 115) 0%,
+    rgb(33, 138, 174),
+    rgb(32, 167, 172)
+  );
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+
+.mashead .ui.menu .ui.button,
+.ui.menu a.ui.inverted,
+button {
+  margin-left: 0.5em;
+}
+
+.mashead h1 {
+  font-size: 5em;
+  font-weight: normal;
+}
+
+.mashead h2 {
+  font-size: 1.7em;
+  font-weight: normal;
+}

@@ -1,6 +1,7 @@
 import { Grid, Segment, Header } from "semantic-ui-react";
 import ActivityList from "./ActivityList";
 import { observer } from "mobx-react-lite";
+import ActivityFilter from "./ActivityFilter";
 
 export default observer(function ActivityDashboard() {
   return (
@@ -19,28 +20,7 @@ export default observer(function ActivityDashboard() {
       </Grid.Column>
 
       <Grid.Column width={6}>
-        <Segment
-          raised
-          style={{
-            borderRadius: 12,
-            padding: 20,
-            boxShadow: "0 0 10px rgba(0,0,0,0.05)",
-            backgroundColor: "#f9f9f9",
-          }}
-        >
-          <Header
-            as="h3"
-            textAlign="center"
-            style={{ color: "#555", marginBottom: 20 }}
-          >
-            فیلترها
-          </Header>
-
-          {/* اینجا بعداً کامپوننت فیلتر بذار */}
-          <p style={{ color: "#777", textAlign: "center" }}>
-            در اینجا می‌توانید فعالیت‌ها را براساس دسته‌بندی، تاریخ یا شهر فیلتر کنید.
-          </p>
-        </Segment>
+        <ActivityFilter/>
       </Grid.Column>
     </Grid>
   );

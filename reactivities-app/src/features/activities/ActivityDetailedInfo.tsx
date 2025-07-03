@@ -18,16 +18,18 @@ export default function ActivityDetailedInfo({ activity }: Props) {
           </Grid.Column>
         </Grid>
       </Segment>
+
       <Segment attached>
         <Grid verticalAlign='middle'>
           <Grid.Column width={1}>
             <Icon name='calendar' size='large' color='teal' />
           </Grid.Column>
           <Grid.Column width={15} textAlign='right' dir='rtl'>
-            <span>ثبت در تاریخ : {new Date(activity!.date).toLocaleDateString('fa-IR')}</span>
+            <span>ثبت در تاریخ : {activity ? new Date(activity.date).toLocaleDateString('fa-IR') : ''}</span>
           </Grid.Column>
         </Grid>
       </Segment>
+
       <Segment attached>
         <Grid verticalAlign='middle'>
           <Grid.Column width={1}>
@@ -36,6 +38,20 @@ export default function ActivityDetailedInfo({ activity }: Props) {
           <Grid.Column width={15} textAlign='right' dir='rtl'>
             <span>
              {activity?.city}, {activity?.venue}
+            </span>
+          </Grid.Column>
+        </Grid>
+      </Segment>
+
+      {/* بخش دسته‌بندی */}
+      <Segment attached>
+        <Grid verticalAlign='middle'>
+          <Grid.Column width={1}>
+            <Icon name='tags' size='large' color='teal' />
+          </Grid.Column>
+          <Grid.Column width={15} textAlign='right' dir='rtl'>
+            <span>
+              دسته‌بندی: {activity?.category ?? 'ندارد'}
             </span>
           </Grid.Column>
         </Grid>
