@@ -14,8 +14,8 @@ export default function HomePage() {
           />
         </Header>
         <Header as="h2" inverted content="خوش آمدید به وب‌سایت" />
-        <Button color="teal" size="huge" as={NavLink} to="/activities">
-          من را به لیست فعالیت‌ها ببر!
+        <Button color="teal" size="huge" as={NavLink} to="/login">
+        ورود
         </Button>
       </div>
     </div>

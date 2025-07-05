@@ -6,7 +6,7 @@ interface Props{
     placeholder:string;
     name:string;
     lable?:string;
-    type?:string
+    type?:string;
 }
 
 
