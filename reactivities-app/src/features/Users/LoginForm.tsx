@@ -1,8 +1,9 @@
-import { Form, Formik } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 import MyTextInput from "../../app/common/form/MyTextInput";
-import { Button } from "semantic-ui-react";
+import { Button, Label } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../app/stores/store";
+
 
 export default observer(function LoginForm(){
 
@@ -11,9 +12,10 @@ export default observer(function LoginForm(){
     return (
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => userStore.login(values)}
+        onSubmit={(values,{setErrors}) => userStore.login(values)
+        .catch(error => setErrors({email:" یا کلمه عبور وارد شده صحیح نمی باشه"}))}
       >
-        {({ handleSubmit,isSubmitting }) => (
+        {({ handleSubmit,isSubmitting,errors }) => (
           <Form onSubmit={handleSubmit} autoComplete="off" className="ui form">
 
             <div className="field">
@@ -23,7 +25,7 @@ export default observer(function LoginForm(){
             <div className="field"> 
                 <MyTextInput name="password" placeholder="کلمه عبور" lable="password" type="password" />
             </div>
-
+            <ErrorMessage name='error' render={() => <Label style={{marginTop:10}} content={errors.email}  color="red"/>}/>
             <div > 
                 <Button loading={isSubmitting}  positive content='ورود ' fluid />
             </div>

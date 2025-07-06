@@ -2,6 +2,8 @@ import { keys, makeAutoObservable, observable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
 import { data } from "react-router-dom";
+import { AxiosError } from 'axios';
+import {v4 as uuid} from 'uuid'
 
 export default class ActivityStore {
   //activities: Activity[] = [];
@@ -69,15 +71,22 @@ export default class ActivityStore {
   handleCreateAcitvity = async (activity: Activity, imageFile: File) => {
     this.submitting = true;
     try {
-      await agent.Activities.create(activity, imageFile);
-      const newActivity = await agent.Activities.details(activity.id); 
+      const newId=uuid()
+      await agent.Activities.create({...activity,id:newId}, imageFile);
+      const newActivity = await agent.Activities.details(newId); 
       runInAction(() => {
         this.acitivityRegistery.set(newActivity.id, newActivity);
         this.selectedActivity = newActivity;
         this.editMode = false;
       });
     } catch (error) {
-      console.log(error);
+       const axiosError = error as AxiosError<any>;
+    // اگر ارور از سمت سرور با ساختار Validation باشد
+    const validationErrors = axiosError?.response?.data?.errors;
+    if (validationErrors) {
+      // 🔥 اینجا ارورها رو به فرمک پاس می‌دیم
+      throw validationErrors; // به بالا پاس بده
+    }
     }finally {
         this.submitting = false;
     }

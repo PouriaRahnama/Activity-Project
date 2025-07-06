@@ -4,6 +4,7 @@ import { User, UserFormValues } from "../models/user";
 
 axios.defaults.baseURL = 'https://localhost:7227/api';
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
+
 const create = (activity: Activity, imageFile: File) => {
     const formData = new FormData();
 
@@ -68,5 +69,6 @@ const agent = {
     Activities,
     Account
 }
+
 
 export default agent;

@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import MyTextInput from "../../app/common/form/MyTextInput";
 import MySelectInput from "../../app/common/form/MySelectInput";
 import MyTextAreaInput from "../../app/common/MyTextAreaInput";
-import {v4 as uuid} from 'uuid'
+
 import MyFileInput from "../../app/common/form/MyFileInput";
 
 export default function ActivityForm() {
@@ -42,27 +42,50 @@ export default function ActivityForm() {
     }
   }, [activityStore.selectedActivity, id]);
 
-  function handleFormSubmit(act:Activity) {
-    if (!imageFile) {
-      setImageError("لطفا عکس را وارد کنید");
-      return;
-    }
-    setImageError(null);
-    if (!act.id && act.id.length===0) {
-      act.id = uuid();
-      activityStore
-        .handleCreateAcitvity(act, imageFile!)
-        .then(() => navigate(`/activities/${act.id}`));
-    } else {
-      activityStore
-        .handleEditAcitvity(act, imageFile!)
-        .then(() => navigate(`/activities/${act.id}`));
-    }
+function handleFormSubmit(act: Activity, setErrors: (errors: { [key: string]: string }) => void) {
+  if (!imageFile) {
+    setImageError("لطفا عکس را وارد کنید");
+    return;
   }
+  setImageError(null);
+  if (!act.id || act.id.length === 0) {
+      console.log("act",act)
+    activityStore
+      .handleCreateAcitvity(act, imageFile!).then(() => {
+      navigate(`/activities/${activityStore.selectedActivity?.id}`);
+    })
+      .catch((error) => {
+        if (typeof error === 'object') {
+          const formikErrors: { [key: string]: string } = {};
+          for (const key in error) {
+           const Key = key.toLowerCase()
+            formikErrors[Key] = error[key][0];
+            console.log("handleFormSubmit",formikErrors)
+          }
+          setErrors(formikErrors);
+        }
+      });
+  } else {
+    console.log("act",act)
+    activityStore
+      .handleEditAcitvity(act, imageFile!).then(() => {
+         navigate(`/activities/${activityStore.selectedActivity?.id}`);
+    }).catch((error) => {
+        if (typeof error === 'object') {
+          const formikErrors: { [key: string]: string } = {};
+          for (const key in error) {
+            const Key = key.toLowerCase()
+            formikErrors[Key] = error[key][0];
+          }
+          setErrors(formikErrors);
+        }
+      });
+  }
+}
+
 
 
   const validationsSchema=Yup.object({
-    title:Yup.string().required('لطفا عنوان را وارد کنید'),
     description:Yup.string().required('لطفا توضیحات را وارد کنید'),
     category:Yup.string().required('لطفا دسته بندی را وارد کنید'),
     city:Yup.string().required('لطفا شهر را وارد کنید'),
@@ -87,8 +110,9 @@ export default function ActivityForm() {
         {id ? "Edit Activity" : "Create New Activity"}
       </Header>
       <Divider />
-      <Formik validationSchema={validationsSchema} enableReinitialize initialValues={activity} onSubmit={(values => handleFormSubmit(values))}>
-        {({ handleSubmit,isValid,isSubmitting,dirty }) => (
+      <Formik validationSchema={validationsSchema} enableReinitialize initialValues={activity} 
+      onSubmit={(values, formikHelpers) => handleFormSubmit(values, formikHelpers.setErrors)}>
+        {({ handleSubmit,isValid,isSubmitting,dirty,errors }) => (
           <Form onSubmit={handleSubmit} autoComplete="off" className="ui form">
 
             <div className="field">
