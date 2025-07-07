@@ -114,7 +114,7 @@ namespace Reactivities.Api.Controllers
             {
                 Avatar = user.Avatar,
                 DisplayName = user.DisplayName,
-                UserName = user.UserName
+                UserName = user.UserName               
             });
         }
 
