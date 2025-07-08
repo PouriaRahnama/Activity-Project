@@ -19,6 +19,21 @@ export default class UserStore {
     return !!this.user;
   }
 
+register =async (creds:UserFormValues)=>{
+
+    try{
+        const user = await agent.Account.register(creds);
+        store.commonStore.setToken(user.token);
+        runInAction(()=>
+          this.user = user
+        )
+        router.navigate('/activities');
+        store.modalStore.closeModal();
+    }
+    catch(error){
+        throw error;
+    }
+  }
 
   login =async (creds:UserFormValues)=>{
 
@@ -28,7 +43,8 @@ export default class UserStore {
         runInAction(()=>
           this.user = user
         )
-        router.navigate('/activities')
+        router.navigate('/activities');
+        store.modalStore.closeModal();
     }
     catch(error){
         throw error;
@@ -39,7 +55,7 @@ export default class UserStore {
     store.commonStore.setToken(null)
     this.user=null
 
-   router.navigate('/login')
+   router.navigate('/')
   }
 
 

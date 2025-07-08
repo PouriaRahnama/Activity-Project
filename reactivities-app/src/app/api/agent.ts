@@ -1,9 +1,23 @@
 import axios, { AxiosResponse } from "axios";
 import { Activity } from "../models/activity";
 import { User, UserFormValues } from "../models/user";
+import { store } from "../stores/store";
 
 axios.defaults.baseURL = 'https://localhost:7227/api';
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
+
+
+axios.interceptors.request.use(congif => {
+    const token = store.commonStore.token;
+    if(token && congif.headers)
+    {
+        congif.headers.Authorization = `bearer ${token}`;      
+    }
+    return congif;
+})
+
+
+
 
 const create = (activity: Activity, imageFile: File) => {
     const formData = new FormData();

@@ -27,14 +27,10 @@ export default observer(function ActivityDetails() {
 
   return (
         <Grid>
-            <Grid.Column width={10}>
+            <Grid.Column width={15}>
                 <ActivityDetailedHeader activity={activityStore.selectedActivity}></ActivityDetailedHeader>
                 <ActivityDetailedInfo activity={activityStore.selectedActivity}></ActivityDetailedInfo>
-                {/* <ActivityDetailedChat></ActivityDetailedChat> */}
             </Grid.Column>
-            {/* <Grid.Column width={6}>
-                <ActivityDetailedSidebar></ActivityDetailedSidebar>
-            </Grid.Column> */}
         </Grid>
     );
 });

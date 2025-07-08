@@ -10,7 +10,7 @@ export default observer(function ActivityList() {
     return (
       <div
         style={{
-          width: 700,
+          width: 500,
           backgroundColor: "#f0f0f0",
           padding: 30,
           borderRadius: 10,

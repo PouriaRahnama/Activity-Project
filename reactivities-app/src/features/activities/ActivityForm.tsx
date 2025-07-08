@@ -1,13 +1,13 @@
 import { Button, Header, Icon, Segment, Divider} from "semantic-ui-react";
 import {  useEffect, useState } from "react";
-import { useStore } from "../../app/stores/store";
+import {  useStore } from "../../app/stores/store";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { Activity } from "../../app/models/activity";
 import { Formik,Form, } from "formik";
 import * as Yup from 'yup';
 import MyTextInput from "../../app/common/form/MyTextInput";
 import MySelectInput from "../../app/common/form/MySelectInput";
-import MyTextAreaInput from "../../app/common/MyTextAreaInput";
+import MyTextAreaInput from "../../app/common/form/MyTextAreaInput";
 
 import MyFileInput from "../../app/common/form/MyFileInput";
 

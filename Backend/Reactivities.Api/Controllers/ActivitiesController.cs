@@ -1,11 +1,12 @@
 ﻿using Application.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Reactivities.Application.Services.Interfaces;
 using Reactivities.Domain.DTOs.Activity;
 
 namespace Reactivities.Api.Controllers
 {
-
+    [Authorize]
     public class ActivitiesController : BaseApiController
     {
         #region Constructor
@@ -19,7 +20,7 @@ namespace Reactivities.Api.Controllers
         #region Activities list
 
         [HttpGet]
-       // [Authorize]
+      
         public async Task<IActionResult> GetAllActivities()
         {
             var activities = await _activitiesService.GetAllActivitiesAsync();

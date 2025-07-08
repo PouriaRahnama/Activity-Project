@@ -2,10 +2,12 @@ import React from 'react';
 import { Button, Container, Dropdown, Image, Menu, Icon } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import { useStore } from '../stores/store';
+import LoginForm from '../../features/Users/LoginForm';
+import Registerform from '../../features/Users/Registerform';
 
 export default function NavBar() {
-  const { userStore: { user, logOut } } = useStore();
-
+  const { userStore: { user, logOut },modalStore } = useStore();
+console.log(user)
   return (
     <Menu fixed="top" inverted style={{ backgroundColor: '#2c2f33', padding: '0.7em 0' }}>
       <Container>
@@ -29,10 +31,6 @@ export default function NavBar() {
           Activities
         </Menu.Item>
 
-        <Menu.Item as={NavLink} to="/test" name="Test">
-          <Icon name="bug" />
-          Test Page
-        </Menu.Item>
         <Menu.Item position="right">
           <Button
             as={NavLink}
@@ -49,28 +47,23 @@ export default function NavBar() {
 
         {!user && (
           <Menu.Item position="right">
-            <Button
-              as={NavLink}
-              to="/login"
-              primary
-              style={{ fontWeight: 'bold' }}
-            >
+            <Button color="teal" size="huge" onClick={()=> modalStore.openModal(<LoginForm/>)}>
               ورود
             </Button>
+
+             <Button color="teal" size="huge" style={{marginLeft:10}} onClick={()=> modalStore.openModal(<Registerform/>)}>
+                          ثبت نام 
+               </Button>
           </Menu.Item>
+          
         )}
 
         {user && (
           <Menu.Item position="right">
             <Dropdown
               trigger={
-                <span style={{ display: 'flex', alignItems: 'center', color: 'white', fontWeight: 'bold' }}>
-                  <Image
-                    avatar
-                    spaced="right"
-                    src={user.image || '/assets/user.png'}
-                  />
-                  {user.username}
+                <span >
+                  {user.displayName}
                 </span>
               }
               pointing="top left"
@@ -78,7 +71,7 @@ export default function NavBar() {
               <Dropdown.Menu>
                 <Dropdown.Item
                   as={NavLink}
-                  to={`/profile/${user.username}`}
+                  to={`/profile/${user.userName}`}
                   text="حساب کاربری من"
                   icon="user"
                 />

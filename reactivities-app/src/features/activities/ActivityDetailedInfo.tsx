@@ -5,7 +5,18 @@ interface Props {
   activity: Activity | undefined;
 }
 
+function fixImageWidths(html: string): string {
+  return html.replace(/<img([^>]*)>/g, (match, attrs) => {
+    if (attrs.includes('style=')) {
+      return `<img${attrs.replace(/style="([^"]*)"/, (s: any, styles: any) => `style="${styles}; width: -moz-available;"`)}>`;
+    } else {
+      return `<img${attrs} style="width: -moz-available;">`;
+    }
+  });
+}
+
 export default function ActivityDetailedInfo({ activity }: Props) {
+  
   return (
     <Segment.Group>
       <Segment attached='top'>
@@ -14,7 +25,8 @@ export default function ActivityDetailedInfo({ activity }: Props) {
             <Icon size='large' color='teal' name='info' />
           </Grid.Column>
           <Grid.Column width={15} textAlign='right' dir='rtl'>
-            <p>{activity?.description}</p>
+          <div dangerouslySetInnerHTML={{ __html: fixImageWidths(activity!.description) }} />
+
           </Grid.Column>
         </Grid>
       </Segment>

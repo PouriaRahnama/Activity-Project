@@ -5,13 +5,12 @@ import NavBar from './NavBar';
 import { useStore } from '../stores/store';
 import { Outlet, useLocation } from 'react-router-dom';
 import HomePage from '../../features/home/HomePage';
+import ModalContainer from '../common/modals/ModalContainer';
+import { observer } from 'mobx-react-lite';
 
-function App() {
-  const { activityStore,commonStore,userStore } = useStore();
+export default observer(function App() {
+  const { commonStore,userStore } = useStore();
  const location = useLocation()
-  useEffect(() => {
-    activityStore.loadActivities();
-  }, []);
 
   useEffect(() => {
     if(commonStore.token){
@@ -19,13 +18,14 @@ function App() {
     }else{
       commonStore.setAppLoaded()
     }
-  }, [commonStore]);
+  }, [commonStore,userStore]);
 
  if(!commonStore.apploaded){
   return <p>هنوز سایت لود نشده است </p>
  }
   return (
     <>
+    <ModalContainer/>
       {location.pathname === "/" ? (
         <HomePage />
       ) : (
@@ -42,4 +42,5 @@ function App() {
   );
 }
 
-export default App;
+
+)
