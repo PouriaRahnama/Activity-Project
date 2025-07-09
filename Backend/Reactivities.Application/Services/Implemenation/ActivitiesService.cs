@@ -36,6 +36,11 @@ namespace Reactivities.Application.Services.Implemenation
             return await _activitiesRepository.GetAllActivitiesAsync();
         }
 
+        public async Task<ActivityDto?> GetActivity(Guid id)
+        {
+            return await _activitiesRepository.GetActivity(id);
+        }
+
         public async Task<Activity?> GetActivityById(Guid id)
         {
             return await _activitiesRepository.GetActivityById(id);

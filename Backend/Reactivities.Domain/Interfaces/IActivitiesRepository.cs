@@ -23,6 +23,7 @@ namespace Reactivities.Domain.Interfaces
         void Update(Activity activity);
 
         void Delete(Activity activity);
+        Task<ActivityDto?> GetActivity(Guid id);
 
         #endregion
     }

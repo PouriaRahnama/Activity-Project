@@ -42,7 +42,7 @@ namespace Reactivities.Infra.Data.Repositories
                     Description = a.Description,
                     Date = a.Date,
                     Category = a.Category,
-                    IsCancelled=a.IsCancelled,
+                    IsCancelled = a.IsCancelled,
                     HostUserName = a.ActivityAttendees.FirstOrDefault(aa => aa.IsHost).User.UserName,
                     Attendees = a.ActivityAttendees.Select(aa => new ProfileDto()
                     {
@@ -52,9 +52,39 @@ namespace Reactivities.Infra.Data.Repositories
                         Image = aa.User.Avatar
                     })
                     .ToList(),
-                    
+
                 })
                 .ToListAsync();
+        }
+
+        public async Task<ActivityDto?> GetActivity(Guid id)
+        {
+            return await _context.Activities
+               .Include(a => a.ActivityAttendees)
+               .ThenInclude(a => a.User)
+               .Select(a => new ActivityDto()
+               {
+                   City = a.City,
+                   ImageName = a.ImageName,
+                   Title = a.Title,
+                   Venue = a.Venue,
+                   Id = a.Id,
+                   Description = a.Description,
+                   Date = a.Date,
+                   Category = a.Category,
+                   IsCancelled = a.IsCancelled,
+                   HostUserName = a.ActivityAttendees.FirstOrDefault(aa => aa.IsHost).User.UserName,
+                   Attendees = a.ActivityAttendees.Select(aa => new ProfileDto()
+                   {
+                       UserName = aa.User.UserName,
+                       Bio = aa.User.DisplayName,
+                       DisplayName = aa.User.DisplayName,
+                       Image = aa.User.Avatar
+                   })
+                   .ToList(),
+
+               })
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Activity?> GetActivityById(Guid id)

@@ -8,9 +8,9 @@ interface Props {
 function fixImageWidths(html: string): string {
   return html.replace(/<img([^>]*)>/g, (match, attrs) => {
     if (attrs.includes('style=')) {
-      return `<img${attrs.replace(/style="([^"]*)"/, (s: any, styles: any) => `style="${styles}; width: -moz-available;"`)}>`;
+      return `<img${attrs.replace(/style="([^"]*)"/, (s: any, styles: any) => `style="${styles}; width: -webkit-fill-available;"`)}>`;
     } else {
-      return `<img${attrs} style="width: -moz-available;">`;
+      return `<img${attrs} style="width: -webkit-fill-available">`;
     }
   });
 }

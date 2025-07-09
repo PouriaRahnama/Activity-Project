@@ -16,13 +16,14 @@ namespace Reactivities.Application.Services.Interfaces
 
         Task<Activity?> GetActivityById(Guid id);
 
-        Task<bool> CreateActivityAsync(ActivityViewModel activity,int userId);
+        Task<bool> CreateActivityAsync(ActivityViewModel activity, int userId);
 
         Task<bool> EditActivityAsync(ActivityViewModel model);
 
         Task<bool> DeleteActivityAsync(Guid id);
 
         Task<bool> UpdateAttendeeAsync(UpdateActivityAttendeeDto model);
+        Task<ActivityDto?> GetActivity(Guid id);
 
         #endregion
     }

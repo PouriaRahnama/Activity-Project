@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Activity } from "../models/activity";
+import { Activity, CreateOrEditActivity } from "../models/activity";
 import { User, UserFormValues } from "../models/user";
 import { store } from "../stores/store";
 
@@ -19,7 +19,7 @@ axios.interceptors.request.use(congif => {
 
 
 
-const create = (activity: Activity, imageFile: File) => {
+const create = (activity: CreateOrEditActivity, imageFile: File) => {
     const formData = new FormData();
 
     formData.append("Id", activity.id);
@@ -36,7 +36,7 @@ const create = (activity: Activity, imageFile: File) => {
 
     return requests.postFormData<void>('/activities/Create', formData);
 };
-const update = (activity: Activity, imageFile: File) => {
+const update = (activity: CreateOrEditActivity, imageFile: File) => {
     const formData = new FormData();
 
     formData.append("id", activity.id);

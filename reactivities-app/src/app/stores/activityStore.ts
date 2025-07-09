@@ -1,6 +1,6 @@
 import { keys, makeAutoObservable, observable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Activity } from "../models/activity";
+import { Activity, CreateOrEditActivity } from "../models/activity";
 import { data } from "react-router-dom";
 import { AxiosError } from 'axios';
 import {v4 as uuid} from 'uuid'
@@ -68,7 +68,7 @@ export default class ActivityStore {
     );
   }
 
-  handleCreateAcitvity = async (activity: Activity, imageFile: File) => {
+  handleCreateAcitvity = async (activity: CreateOrEditActivity, imageFile: File) => {
     this.submitting = true;
     try {
       const newId=uuid()
@@ -76,23 +76,22 @@ export default class ActivityStore {
       const newActivity = await agent.Activities.details(newId); 
       runInAction(() => {
         this.acitivityRegistery.set(newActivity.id, newActivity);
-        this.selectedActivity = newActivity;
+        this.selectedActivity = {...newActivity,id:newActivity.id};
         this.editMode = false;
       });
+      return newActivity
     } catch (error) {
        const axiosError = error as AxiosError<any>;
-    // اگر ارور از سمت سرور با ساختار Validation باشد
     const validationErrors = axiosError?.response?.data?.errors;
     if (validationErrors) {
-      // 🔥 اینجا ارورها رو به فرمک پاس می‌دیم
-      throw validationErrors; // به بالا پاس بده
+      throw validationErrors;
     }
     }finally {
         this.submitting = false;
     }
   };
 
-  handleEditAcitvity = async (activity: Activity, imageFile: File) => {
+  handleEditAcitvity = async (activity: CreateOrEditActivity, imageFile: File) => {
     this.submitting = true;
 
     try {

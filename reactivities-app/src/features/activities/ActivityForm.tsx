@@ -2,7 +2,7 @@ import { Button, Header, Icon, Segment, Divider} from "semantic-ui-react";
 import {  useEffect, useState } from "react";
 import {  useStore } from "../../app/stores/store";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { Activity } from "../../app/models/activity";
+import { Activity, CreateOrEditActivity } from "../../app/models/activity";
 import { Formik,Form, } from "formik";
 import * as Yup from 'yup';
 import MyTextInput from "../../app/common/form/MyTextInput";
@@ -25,12 +25,12 @@ export default function ActivityForm() {
   const { activityStore } = useStore();
   const { id } = useParams<{ id?: string }>();
   const [imageFile, setImageFile] = useState<File>(); 
-  const [activity, setActivity] = useState<Activity>(init);
+  const [activity, setActivity] = useState<CreateOrEditActivity>(init);
   const [imageError, setImageError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
-      activityStore.loadActivity(id);
+      activityStore.loadActivity(id).then(()=>{console.log("activityStore.loadActivity(id)")});
     } else {
       setActivity(init);
     }
@@ -38,20 +38,20 @@ export default function ActivityForm() {
 
   useEffect(() => {
     if (id && activityStore.selectedActivity) {
-      setActivity(activityStore.selectedActivity);
+    setActivity(activityStore.selectedActivity!);
     }
   }, [activityStore.selectedActivity, id]);
 
-function handleFormSubmit(act: Activity, setErrors: (errors: { [key: string]: string }) => void) {
+function handleFormSubmit(act: CreateOrEditActivity, setErrors: (errors: { [key: string]: string }) => void) {
   if (!imageFile) {
     setImageError("لطفا عکس را وارد کنید");
     return;
   }
   setImageError(null);
   if (!act.id || act.id.length === 0) {
-      console.log("act",act)
     activityStore
-      .handleCreateAcitvity(act, imageFile!).then(() => {
+      .handleCreateAcitvity(act, imageFile!).then((created) => {
+        console.log("created",created)
       navigate(`/activities/${activityStore.selectedActivity?.id}`);
     })
       .catch((error) => {
@@ -60,7 +60,6 @@ function handleFormSubmit(act: Activity, setErrors: (errors: { [key: string]: st
           for (const key in error) {
            const Key = key.toLowerCase()
             formikErrors[Key] = error[key][0];
-            console.log("handleFormSubmit",formikErrors)
           }
           setErrors(formikErrors);
         }
@@ -82,8 +81,6 @@ function handleFormSubmit(act: Activity, setErrors: (errors: { [key: string]: st
       });
   }
 }
-
-
 
   const validationsSchema=Yup.object({
     description:Yup.string().required('لطفا توضیحات را وارد کنید'),

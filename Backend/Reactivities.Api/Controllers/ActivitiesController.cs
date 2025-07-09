@@ -20,7 +20,7 @@ namespace Reactivities.Api.Controllers
         #region Activities list
 
         [HttpGet]
-      
+
         public async Task<IActionResult> GetAllActivities()
         {
             var activities = await _activitiesService.GetAllActivitiesAsync();
@@ -34,7 +34,7 @@ namespace Reactivities.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)
         {
-            var activity = await _activitiesService.GetActivityById(id);
+            var activity = await _activitiesService.GetActivity(id);
             return new JsonResult(activity);
         }
 
@@ -63,7 +63,7 @@ namespace Reactivities.Api.Controllers
                 });
             }
 
-            var activity = await _activitiesService.CreateActivityAsync(model,1);
+            var activity = await _activitiesService.CreateActivityAsync(model, 1);
 
 
             if (activity)

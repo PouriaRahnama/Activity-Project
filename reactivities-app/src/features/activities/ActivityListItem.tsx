@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Activity } from "../../app/models/activity";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useStore } from "../../app/stores/store";
+import ActivityListItemAttendee from "./ActivityListItemAttendee";
 
 interface Props{
   activity:Activity
@@ -13,7 +14,6 @@ export default function ActivityListItem({activity}:Props){
 
       const { activityStore } = useStore();
       const [target, setTarget] = useState("");
-  
     
       function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>,id: string) {
         setTarget(e.currentTarget.name);
@@ -39,6 +39,9 @@ export default function ActivityListItem({activity}:Props){
             <p>
               <strong>مکان:</strong> {activity.city}، {activity.venue}
             </p>
+          </Card.Description>
+          <Card.Description>
+              <ActivityListItemAttendee attendees={activity.attendees}/>
           </Card.Description>
         </Card.Content>
         <Card.Content extra style={{ textAlign: "right" }}>
