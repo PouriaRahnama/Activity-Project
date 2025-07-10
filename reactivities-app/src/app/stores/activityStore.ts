@@ -1,4 +1,4 @@
-import { keys, makeAutoObservable, observable, runInAction } from "mobx";
+import {  makeAutoObservable, observable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity, CreateOrEditActivity, predicate } from "../models/activity";
 import { AxiosError } from 'axios';
@@ -45,7 +45,6 @@ export default class ActivityStore {
   }
 
   setPredicate = (key: string, value: any) => {
-    // فقط یکی از فیلترها فعال بشه
     if (key === "all") {
       this.predicate = {
         all: true,
@@ -155,7 +154,7 @@ export default class ActivityStore {
 
     try {
       await agent.Activities.update(activity, imageFile);
-      const updated = await agent.Activities.details(activity.id); // 👈 دوباره از سرور بگیر
+      const updated = await agent.Activities.details(activity.id); 
       console.log("test", updated);
       runInAction(() => {
         this.acitivityRegistery.set(updated.id, updated);
@@ -172,15 +171,6 @@ export default class ActivityStore {
 
   loadActivity = async (id: string) => {
     this.submitting = true;
-    //let activity = this.acitivityRegistery.get(id);
-    const activity = await agent.Activities.details(id);
-    if (activity) {
-      runInAction(() => {
-        this.SetActivity(activity);
-        this.selectedActivity = activity;
-        this.submitting = false;
-      });
-    } else {
       try {
         const activity = await agent.Activities.details(id);
         runInAction(() => {
@@ -190,11 +180,8 @@ export default class ActivityStore {
       } catch (error) {
         console.log(error);
       } finally {
-        runInAction(() => {
           this.submitting = false;
-        });
       }
-    }
   };
 
   updateAttendance = async () => {
@@ -204,20 +191,6 @@ export default class ActivityStore {
       await agent.Activities.attend(this.selectedActivity!.id);
       runInAction(() => {
         this.loadActivity(this.selectedActivity!.id);
-        // if (this.selectedActivity?.isGoing) {
-        //   this.selectedActivity.attendees =
-        //     this.selectedActivity.attendees.filter(
-        //       (a) => a.userName !== user?.userName
-        //     );
-
-        //   this.selectedActivity.isGoing = false;
-        // } else {
-        //   const attendee = new Profile(user!);
-        //   this.selectedActivity?.attendees.push(attendee);
-        //   this.selectedActivity!.isGoing = true;
-        // }
-
-        // this.acitivityRegistery.set(this.selectedActivity!.id,this.selectedActivity!)
       });
     } catch (error) {
       console.log(error);
@@ -232,8 +205,6 @@ export default class ActivityStore {
       await agent.Activities.attend(this.selectedActivity!.id);
       runInAction(() => {
         this.loadActivity(this.selectedActivity!.id);
-        // this.selectedActivity!.IsCancelled = !this.selectedActivity!.IsCancelled;
-        // this.acitivityRegistery.set(this.selectedActivity!.id,this.selectedActivity!)
       });
     } catch (error) {
       console.log(error);
