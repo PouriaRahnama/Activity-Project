@@ -59,6 +59,13 @@ export default function ActivityListItem({activity}:Props){
               </Label>
             </Card.Description>
           )}
+          {activity.isCancelled  && (
+            <Card.Description>
+              <Label style={{marginTop:"5px"}} basic color="red">
+                کنسل شده
+              </Label>
+            </Card.Description>
+          )}
         </Card.Content>
         <Card.Content extra style={{ textAlign: "right" }}>
           <Label color="teal" ribbon style={{ float: "left" }}>

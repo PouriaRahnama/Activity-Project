@@ -1,4 +1,4 @@
-import { Segment, Item, Header, Button, Image } from 'semantic-ui-react';
+import { Segment, Item, Header, Button, Image, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Activity } from '../../app/models/activity';
 import { Link, NavLink } from 'react-router-dom';
@@ -29,6 +29,9 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
+        {
+          activity?.isCancelled && <Label style={{position:'absolute',zIndex:1000}}  ribbon color='red' content='کنسل شده'/>
+        }
         <Image
           src={`https://localhost:7227/images/${activity?.imageName}`}
           fluid
@@ -59,13 +62,12 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
       <Segment clearing attached="bottom" textAlign="right" dir="rtl">
         {activity?.isHost ? (
           <Button
-            as={Link}
-            to={`/manage/${activity.id}`}
-            color="orange"
+            onClick={activityStore.cancelActivity}
+            color={activity.isCancelled ? 'green':'red'}
             floated="left"
-          >
-            مدیریت رویداد
-          </Button>
+            content={activity.isCancelled? 'فعال کردن رویداد':'کنسل رویداد'}
+            loading={activityStore.submitting}
+          />
         ) : activity?.isGoing ? (
           <Button onClick={activityStore.updateAttendance}>لغو حضور</Button>
         ) : (

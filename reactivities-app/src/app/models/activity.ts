@@ -10,7 +10,7 @@ export interface Activity{
     city:string;
     venue:string;
     imageName:string;
-    IsCancelled:boolean;
+    isCancelled:boolean;
     attendees:Profile[];
     hostUserName:string;
     isHost?:boolean;

@@ -4,7 +4,6 @@ import { Activity, CreateOrEditActivity } from "../models/activity";
 import { AxiosError } from 'axios';
 import {v4 as uuid} from 'uuid'
 import { store } from "./store";
-import { Profile } from "../models/profile";
 
 export default class ActivityStore {
   acitivityRegistery = new Map<string, Activity>();
@@ -188,7 +187,27 @@ export default class ActivityStore {
     }
     catch(error){
       console.log(error)
+    }finally{
+      this.submitting = false;
     }
   }
 
+  cancelActivity = async () => {
+        this.submitting=true
+            try{
+      await agent.Activities.attend(this.selectedActivity!.id);
+      runInAction(
+        ()=>{
+         this.loadActivity(this.selectedActivity!.id)
+          // this.selectedActivity!.IsCancelled = !this.selectedActivity!.IsCancelled;
+          // this.acitivityRegistery.set(this.selectedActivity!.id,this.selectedActivity!)
+        }
+      )
+    }
+    catch(error){
+      console.log(error)
+    }finally{
+       this.submitting=false
+    }
+  }
 }

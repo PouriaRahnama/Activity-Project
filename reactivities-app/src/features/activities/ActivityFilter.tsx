@@ -1,5 +1,6 @@
 import Calendar from "react-calendar";
 import { Header, Menu, Icon, Segment } from "semantic-ui-react";
+import 'react-calendar/dist/Calendar.css'
 
 export default function ActivityFilters() {
   return (

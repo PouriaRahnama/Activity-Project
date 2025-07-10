@@ -7,6 +7,7 @@ import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
 
 import ActivityDetailedSidebar from "./ActivityDetailedSidebar";
+import Loading from "../loading/Loading";
 
 export default observer(function ActivityDetails() {
   const { activityStore } = useStore();
@@ -19,7 +20,7 @@ export default observer(function ActivityDetails() {
   if (activityStore.submitting || !activityStore.selectedActivity)
     return (
       <div style={{ padding: 30, textAlign: "center", fontSize: 18, color: "#666" }}>
-        در حال بارگذاری...
+       <Loading/>
       </div>
     );
 
