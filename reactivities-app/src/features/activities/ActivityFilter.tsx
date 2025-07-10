@@ -1,8 +1,13 @@
 import Calendar from "react-calendar";
 import { Header, Menu, Icon, Segment } from "semantic-ui-react";
 import 'react-calendar/dist/Calendar.css'
+import { useStore } from "../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
-export default function ActivityFilters() {
+export default observer(function ActivityFilters() {
+
+  const {activityStore} = useStore()
+
   return (
     <Segment raised style={{ marginTop: 30, padding: 20, direction: "rtl" }}>
       <Header
@@ -15,9 +20,12 @@ export default function ActivityFilters() {
       </Header>
 
       <Menu fluid vertical secondary>
-        <Menu.Item name="all" content="همه رویدادها" icon="list" />
-        <Menu.Item name="hosting" content="برگزارکننده‌ام" icon="star" />
-        <Menu.Item name="going" content="شرکت کرده‌ام" icon="check" />
+        <Menu.Item name="all" content="همه رویدادها" icon="list" 
+            onClick={() => activityStore.setPredicate("all", true)} />
+        <Menu.Item name="hosting" content="برگزارکننده‌ام" icon="star"
+          onClick={() => activityStore.setPredicate("isHost", true)} />
+        <Menu.Item name="going" content="شرکت کرده‌ام" icon="check"
+           onClick={() => activityStore.setPredicate("isGoing", true)} />
       </Menu>
 
       <div style={{ marginTop: 30 }}>
@@ -30,8 +38,11 @@ export default function ActivityFilters() {
           <Header.Content>تقویم رویدادها</Header.Content>
         </Header>
 
-        <Calendar locale="fa-IR" />
+        <Calendar locale="fa-IR"
+          onChange={(date) => activityStore.setPredicate("startDate", date)}
+          value={activityStore.predicate.startDate} />
       </div>
     </Segment>
   );
 }
+)

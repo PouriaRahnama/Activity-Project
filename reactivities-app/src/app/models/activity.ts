@@ -48,3 +48,10 @@ export class ActivityFormValues {
     this.title= activity.title
   }
 }
+
+export interface predicate {
+  all?: boolean,
+  isHost?: boolean,
+  isGoing?: boolean,
+  startDate?: '' | null
+};

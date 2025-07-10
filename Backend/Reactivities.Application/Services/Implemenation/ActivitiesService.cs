@@ -113,6 +113,7 @@ namespace Reactivities.Application.Services.Implemenation
             activity.Category = model.Category;
             activity.City = model.City;
             activity.Venue = model.Venue;
+            activity.Date = model.Date;
 
             // ✅ اگر تصویر جدیدی ارسال شده
             if (model.ImageFile != null)

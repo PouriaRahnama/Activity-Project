@@ -1,6 +1,6 @@
 import { keys, makeAutoObservable, observable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Activity, CreateOrEditActivity } from "../models/activity";
+import { Activity, CreateOrEditActivity, predicate } from "../models/activity";
 import { AxiosError } from 'axios';
 import {v4 as uuid} from 'uuid'
 import { store } from "./store";
@@ -10,12 +10,57 @@ export default class ActivityStore {
   selectedActivity: Activity | undefined = undefined;
   editMode: boolean = false;
   submitting: boolean = false;
+  predicate: predicate = {
+    all: true,
+    isHost: false,
+    isGoing: false,
+    startDate: null,
+  };
 
   constructor() {
     makeAutoObservable(this, {
       acitivityRegistery: observable,
     });
   }
+
+  get ActivitiesByDate() {
+    return Array.from(this.acitivityRegistery.values())
+      .filter((activity) => {
+        const { isHost, isGoing, startDate, all } = this.predicate;
+        if (!all) {
+          if (isHost && !activity.isHost) return false;
+          if (isGoing && !activity.isGoing) return false;
+        }
+        const aDate = new Date(activity.date);
+        const sDate = new Date(startDate!);
+         const sameDay =
+          aDate.getFullYear() === sDate.getFullYear() &&
+          aDate.getMonth() === sDate.getMonth() &&
+          aDate.getDate() === sDate.getDate();
+          if (startDate && !sameDay)
+            return false;
+        return true;
+      })
+      .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+  }
+
+  setPredicate = (key: string, value: any) => {
+    // فقط یکی از فیلترها فعال بشه
+    if (key === "all") {
+      this.predicate = {
+        all: true,
+        isHost: false,
+        isGoing: false,
+        startDate: null,
+      };
+    } else {
+      this.predicate = {
+        ...this.predicate,
+        all: false,
+        [key]: value,
+      };
+    }
+  };
 
   loadActivities = async () => {
     this.submitting = true;
@@ -36,21 +81,20 @@ export default class ActivityStore {
   };
 
   private SetActivity = (activity: Activity) => {
-
     const user = store.userStore.user;
-    if(user){
+    if (user) {
       activity.isGoing = activity.attendees!.some(
-        a => a.userName === user.userName
-      )
+        (a) => a.userName === user.userName
+      );
 
       activity.isHost = activity.hostUserName === user.userName;
-      activity.host = activity.attendees.find(a => a.userName === activity.hostUserName)
+      activity.host = activity.attendees.find(
+        (a) => a.userName === activity.hostUserName
+      );
     }
 
     activity.date = activity.date.split("T")[0];
     this.acitivityRegistery.set(activity.id, activity);
-
-
   };
 
   handleDeleteActivity = async (id: string) => {
@@ -63,12 +107,6 @@ export default class ActivityStore {
       this.submitting = false;
     });
   };
-
-  get ActivitiesByDate() {
-    return Array.from(this.acitivityRegistery.values()).sort(
-      (a, b) => Date.parse(a.date) - Date.parse(b.date)
-    );
-  }
 
   get GroupedActivities() {
     return Object.entries(
@@ -134,7 +172,7 @@ export default class ActivityStore {
 
   loadActivity = async (id: string) => {
     this.submitting = true;
-     //let activity = this.acitivityRegistery.get(id);
+    //let activity = this.acitivityRegistery.get(id);
     const activity = await agent.Activities.details(id);
     if (activity) {
       runInAction(() => {
@@ -159,55 +197,48 @@ export default class ActivityStore {
     }
   };
 
-
-  updateAttendance= async () => {
+  updateAttendance = async () => {
     const user = store.userStore.user;
-    this.submitting=true
-    try{
+    this.submitting = true;
+    try {
       await agent.Activities.attend(this.selectedActivity!.id);
-      runInAction(
-        ()=>{
-         this.loadActivity(this.selectedActivity!.id)
-          // if (this.selectedActivity?.isGoing) {
-          //   this.selectedActivity.attendees =
-          //     this.selectedActivity.attendees.filter(
-          //       (a) => a.userName !== user?.userName
-          //     );
+      runInAction(() => {
+        this.loadActivity(this.selectedActivity!.id);
+        // if (this.selectedActivity?.isGoing) {
+        //   this.selectedActivity.attendees =
+        //     this.selectedActivity.attendees.filter(
+        //       (a) => a.userName !== user?.userName
+        //     );
 
-          //   this.selectedActivity.isGoing = false;
-          // } else {
-          //   const attendee = new Profile(user!);
-          //   this.selectedActivity?.attendees.push(attendee);
-          //   this.selectedActivity!.isGoing = true;
-          // }
+        //   this.selectedActivity.isGoing = false;
+        // } else {
+        //   const attendee = new Profile(user!);
+        //   this.selectedActivity?.attendees.push(attendee);
+        //   this.selectedActivity!.isGoing = true;
+        // }
 
-          // this.acitivityRegistery.set(this.selectedActivity!.id,this.selectedActivity!)
-        }
-      )
-    }
-    catch(error){
-      console.log(error)
-    }finally{
+        // this.acitivityRegistery.set(this.selectedActivity!.id,this.selectedActivity!)
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
       this.submitting = false;
     }
-  }
+  };
 
   cancelActivity = async () => {
-        this.submitting=true
-            try{
+    this.submitting = true;
+    try {
       await agent.Activities.attend(this.selectedActivity!.id);
-      runInAction(
-        ()=>{
-         this.loadActivity(this.selectedActivity!.id)
-          // this.selectedActivity!.IsCancelled = !this.selectedActivity!.IsCancelled;
-          // this.acitivityRegistery.set(this.selectedActivity!.id,this.selectedActivity!)
-        }
-      )
+      runInAction(() => {
+        this.loadActivity(this.selectedActivity!.id);
+        // this.selectedActivity!.IsCancelled = !this.selectedActivity!.IsCancelled;
+        // this.acitivityRegistery.set(this.selectedActivity!.id,this.selectedActivity!)
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.submitting = false;
     }
-    catch(error){
-      console.log(error)
-    }finally{
-       this.submitting=false
-    }
-  }
+  };
 }
