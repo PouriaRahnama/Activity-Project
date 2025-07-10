@@ -7,7 +7,7 @@ import Registerform from '../../features/Users/Registerform';
 
 export default function NavBar() {
   const { userStore: { user, logOut },modalStore } = useStore();
-console.log(user)
+
   return (
     <Menu fixed="top" inverted style={{ backgroundColor: '#2c2f33', padding: '0.7em 0' }}>
       <Container>

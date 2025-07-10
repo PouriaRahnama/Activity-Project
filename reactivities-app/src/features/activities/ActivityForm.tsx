@@ -51,7 +51,7 @@ function handleFormSubmit(act: CreateOrEditActivity, setErrors: (errors: { [key:
   if (!act.id || act.id.length === 0) {
     activityStore
       .handleCreateAcitvity(act, imageFile!).then((created) => {
-        console.log("created",created)
+       // console.log("created",created)
       navigate(`/activities/${activityStore.selectedActivity?.id}`);
     })
       .catch((error) => {

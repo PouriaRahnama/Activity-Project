@@ -9,12 +9,16 @@ export interface Activity{
     category:string;
     city:string;
     venue:string;
-    imageName?:string;
+    imageName:string;
     IsCancelled:boolean;
     attendees:Profile[];
-    hostUserName:string
+    hostUserName:string;
+    isHost?:boolean;
+    isGoing?:boolean;
+    host?:Profile;
 }
 
+ // I Use it
 export interface CreateOrEditActivity{
     id:string;
     title:string;
@@ -23,4 +27,24 @@ export interface CreateOrEditActivity{
     category:string;
     city:string;
     venue:string;
+}
+
+// Or
+export class ActivityFormValues {
+  id?: string = undefined;
+  title: string = "";
+  date: Date | null = null;
+  description: string = "";
+  category: string = "";
+  city: string = "";
+  venue: string = "";
+  constructor(activity : ActivityFormValues ) {
+    this.category = activity.category;
+    this.id = activity?.id;
+    this.date = activity?.date;
+    this.venue = activity?.venue;
+    this.description = activity?.description;
+    this.city=activity.city;
+    this.title= activity.title
+  }
 }

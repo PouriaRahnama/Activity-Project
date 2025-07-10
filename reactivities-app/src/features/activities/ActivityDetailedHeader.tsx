@@ -1,7 +1,8 @@
 import { Segment, Item, Header, Button, Image } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { Activity } from '../../app/models/activity';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import { useStore } from '../../app/stores/store';
 
 interface Props {
   activity: Activity | undefined;
@@ -23,6 +24,8 @@ const activityImageTextStyle = {
 };
 
 export default observer(function ActivityDetailedHeader({ activity }: Props) {
+  const {activityStore} =useStore()
+
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
@@ -40,9 +43,13 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                   content={activity?.title}
                   style={{ color: "white" }}
                 />
-                <p> در تاریخ : {new Date(activity!.date).toLocaleDateString("fa-IR")}</p>
                 <p>
-                  برگزارکننده:   <strong>پوریارهنما</strong>
+                  {" "}
+                  در تاریخ :{" "}
+                  {new Date(activity!.date).toLocaleDateString("fa-IR")}
+                </p>
+                <p>
+                  برگزارکننده: <strong>{activity?.host?.displayName}</strong>
                 </p>
               </Item.Content>
             </Item>
@@ -50,11 +57,21 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
         </Segment>
       </Segment>
       <Segment clearing attached="bottom" textAlign="right" dir="rtl">
-        <Button color="teal">شرکت در رویداد</Button>
-        <Button>لغو حضور</Button>
-        <Button color="orange" floated="left">
-          مدیریت رویداد
-        </Button>
+        {activity?.isHost ? (
+          <Button
+            as={Link}
+            to={`/manage/${activity.id}`}
+            color="orange"
+            floated="left"
+          >
+            مدیریت رویداد
+          </Button>
+        ) : activity?.isGoing ? (
+          <Button onClick={activityStore.updateAttendance}>لغو حضور</Button>
+        ) : (
+          <Button onClick={activityStore.updateAttendance} color="teal">شرکت در رویداد</Button>
+        )}
+
         <Button
           color="blue"
           floated="left"

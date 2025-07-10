@@ -13,7 +13,7 @@ return(
     <List horizontal>
         {
             attendees.map(attendee =>(
-                <List.Item  key={attendee.userName} as={Link} to={`/profiles/${attendee.userName}`}>
+                <List.Item  key={attendee.userName} as={Link} to={`/profiles/${attendee.displayName}`}>
                     <Image size="mini" circular src={attendee.image || '/assets/user-default.png'} ></Image>
                      <List.Content content={attendee.displayName}/>
                 </List.Item>

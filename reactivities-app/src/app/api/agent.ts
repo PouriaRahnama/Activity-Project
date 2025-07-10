@@ -69,7 +69,8 @@ const Activities = {
     details: (id: string) => requests.get<Activity>(`/activities/${id}`),
     create: create,
     update: update,
-    delete: (id: string) => requests.del<void>(`/activities/${id}`)
+    delete: (id: string) => requests.del<void>(`/activities/${id}`),
+    attend:  (id: string) => requests.post<void>(`/activities/${id}/attend`,{}),
 }
 
 

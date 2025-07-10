@@ -11,7 +11,6 @@ interface Props{
 
 
 export default function ActivityListItem({activity}:Props){
-
       const { activityStore } = useStore();
       const [target, setTarget] = useState("");
     
@@ -36,13 +35,30 @@ export default function ActivityListItem({activity}:Props){
             <span>{new Date(activity.date).toLocaleDateString("fa-IR")}</span>
           </Card.Meta>
           <Card.Description>
+            برگزار کننده : {activity.host?.displayName}
+          </Card.Description>
+          <Card.Description>
             <p>
               <strong>مکان:</strong> {activity.city}، {activity.venue}
             </p>
           </Card.Description>
           <Card.Description>
-              <ActivityListItemAttendee attendees={activity.attendees}/>
+            <ActivityListItemAttendee attendees={activity.attendees} />
           </Card.Description>
+          {activity.isHost && (
+            <Card.Description>
+              <Label basic color="orange">
+                برگزار کننده رویداد 
+              </Label>
+            </Card.Description>
+          )}
+          {activity.isGoing && !activity.isHost && (
+            <Card.Description>
+              <Label basic color="green">
+                شرکت کننده در رویداد
+              </Label>
+            </Card.Description>
+          )}
         </Card.Content>
         <Card.Content extra style={{ textAlign: "right" }}>
           <Label color="teal" ribbon style={{ float: "left" }}>

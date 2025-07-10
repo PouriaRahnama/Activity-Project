@@ -1,11 +1,11 @@
-import { Button, Card, Container, Image, Segment, Header, Grid } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
-import { NavLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
-import ActivityDetailedChat from "./ActivityDetailedChat";
+
 import ActivityDetailedSidebar from "./ActivityDetailedSidebar";
 
 export default observer(function ActivityDetails() {
@@ -27,9 +27,12 @@ export default observer(function ActivityDetails() {
 
   return (
         <Grid>
-            <Grid.Column width={15}>
+            <Grid.Column width={10}>
                 <ActivityDetailedHeader activity={activityStore.selectedActivity}></ActivityDetailedHeader>
                 <ActivityDetailedInfo activity={activityStore.selectedActivity}></ActivityDetailedInfo>
+            </Grid.Column>
+            <Grid.Column width={5}>
+                <ActivityDetailedSidebar  activity={activityStore.selectedActivity} ></ActivityDetailedSidebar>
             </Grid.Column>
         </Grid>
     );

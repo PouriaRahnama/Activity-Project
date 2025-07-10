@@ -89,7 +89,7 @@ namespace Reactivities.Infra.Data.Repositories
 
         public async Task<Activity?> GetActivityById(Guid id)
         {
-            return await _context.Activities
+            return await _context.Activities.Include(a => a.ActivityAttendees).ThenInclude(a => a.User)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 

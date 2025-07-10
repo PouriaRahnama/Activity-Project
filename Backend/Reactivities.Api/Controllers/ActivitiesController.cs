@@ -63,7 +63,7 @@ namespace Reactivities.Api.Controllers
                 });
             }
 
-            var activity = await _activitiesService.CreateActivityAsync(model, 1);
+            var activity = await _activitiesService.CreateActivityAsync(model, User.GetUserId());
 
 
             if (activity)
